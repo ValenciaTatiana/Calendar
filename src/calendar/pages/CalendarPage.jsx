@@ -2,8 +2,9 @@ import { Calendar } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import { addHours } from 'date-fns';
-import { NavBar } from "../"
+import { NavBar, CalendarEvent, CalendarModal } from "../"
 import { getMessagesES, localizer } from '../../helpers';
+import { useState } from 'react';
 
 const events = [{
   title: 'Cumpleaños',
@@ -14,8 +15,9 @@ const events = [{
 
 export const CalendarPage = () => {
 
-  const eventStyleGetter = (e, start, end, isSelected) => {
-    console.log({  e, start, end, isSelecte d })
+  const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'week');
+
+  const eventStyleGetter = (event, start, end, isSelected) => {
 
     const style = {
       backgroundColor: '#347cf7',
@@ -28,20 +30,42 @@ export const CalendarPage = () => {
       style
     }
   }
+
+  const onDoubleClick = (event) => {
+    openDateModal();
+  }
+
+  const onSelect = (event) => {
+    setActiveEvent(event);
+  }
+
+  const onViewChanged = (event) => {
+    localStorage.setItem('lastView', event);
+    setLastView(event);
+  }
+
   return (
     <>
+
       <NavBar />
 
       <Calendar
         culture='es'
         localizer={localizer}
         events={events}
+        defaultView={lastView}
         startAccessor="start"
         endAccessor="end"
         style={{ height: 'calc(100dvh - 80px)' }}
         messages={getMessagesES()}
         eventPropGetter={eventStyleGetter}
+        components={{ event: CalendarEvent }}
+        onDoubleClickEvent={onDoubleClick}
+        onSelectEvent={onSelect}
+        onView={onViewChanged}
       />
+
+      <CalendarModal />
     </>
   )
 }
