@@ -4,7 +4,9 @@ import { CandelarApp } from './CandelarApp.jsx'
 import './styles.css'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <CandelarApp />
-  </StrictMode>,
+  // <StrictMode>
+  //   <CandelarApp />
+  // </StrictMode>
+
+  <CandelarApp />
 )
